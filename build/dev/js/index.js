@@ -10324,7 +10324,7 @@
 	        this.mouse = {x: 0, y: 0};
 	        this.lastMouse = {x: 0, y: 0};
 
-	        this.drawSpacing = 1;
+	        this.drawSpacing = 2;
 	        this.brushAlpha = 0.8;
 
 	        this.points = [];
@@ -10333,8 +10333,6 @@
 	        this.frameDelay = 90;
 	        this.frameCount = 60;
 	        this.frame = 0;
-
-	        this.loadBrushes();
 	    }
 
 	    /**
@@ -10365,28 +10363,22 @@
 	    }
 
 	    /**
-	     * Sets up brushes.
+	     * A random brush!
 	     */
-	    loadBrushes() {
-	        this.brushes = [
-	            new WobblyBrush(6),
-	            new WobblyBrush(12),
-	            new WobblyBrush(2),
-	            new WobblyBrush(10),
-	            new WobblyBrush(18),
-	            new WobblyBrush(6),
-	            new WobblyBrush(20),
-	            new WobblyBrush(8),
-	        ];
+	    randomBrush() {
+	        const width = (Math.random() * 28) + 2;
+	        // const opacity = (Math.random() * 0.7) + 0.2;
+	        const opacity = 1;
 
-	        this.brushIndex = 0;
-	        this.currentBrush = this.brushes[0];
+	        return new WobblyBrush(width, '#000000', opacity);
 	    }
 
 	    /**
 	     * Sets up events to start drawing.
 	     */
 	    startDrawing() {
+	        this.setNewBrush();
+
 	        this.$body.on('mouseenter', _.bind(this.mouseEnter, this));
 
 	        this.$body.on('mousedown', _.bind(this.mouseDown, this));
@@ -10565,16 +10557,10 @@
 	    }
 
 	    /**
-	     * Iterates the brush through the available brushes.
+	     * Gets a new random brush
 	     */
 	    setNewBrush() {
-	        this.brushIndex++;
-
-	        if (this.brushIndex >= this.brushes.length) {
-	            this.brushIndex = 0;
-	        }
-
-	        this.currentBrush = this.brushes[this.brushIndex];
+	        this.currentBrush = this.randomBrush();
 	    }
 
 	    /**
@@ -27740,9 +27726,10 @@
 	 * Draws shaky animated lines.
 	 */
 	class WobblyBrush {
-	    constructor(width, color = '#000000') {
+	    constructor(width, color = '#000000', opacity = 0.8) {
 	        this.radius = width / 2;
 	        this.color = color;
+	        this.opacity = opacity;
 
 	        this.jitters = [];
 	        this.frameCount = 60; // MUST BE A DIVISOR OF 60
@@ -27768,7 +27755,9 @@
 	        // console.log('radius: ' + radius);
 
 	        const oldFillStyle = ctx.fillStyle;
+	        const oldOpacity = ctx.globalAlpha;
 	        ctx.fillStyle = this.color;
+	        ctx.globalAlpha = this.opacity;
 
 	        ctx.beginPath();
 	        ctx.arc(
@@ -27782,6 +27771,7 @@
 	        ctx.fill();
 
 	        ctx.fillStyle = oldFillStyle;
+	        ctx.globalAlpha = this.opacity;
 	    }
 	}
 

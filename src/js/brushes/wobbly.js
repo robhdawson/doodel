@@ -6,9 +6,10 @@ const d3 = require('d3-scale');
  * Draws shaky animated lines.
  */
 class WobblyBrush {
-    constructor(width, color = '#000000') {
+    constructor(width, color = '#000000', opacity = 0.8) {
         this.radius = width / 2;
         this.color = color;
+        this.opacity = opacity;
 
         this.jitters = [];
         this.frameCount = 60; // MUST BE A DIVISOR OF 60
@@ -34,7 +35,9 @@ class WobblyBrush {
         // console.log('radius: ' + radius);
 
         const oldFillStyle = ctx.fillStyle;
+        const oldOpacity = ctx.globalAlpha;
         ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
 
         ctx.beginPath();
         ctx.arc(
@@ -48,6 +51,7 @@ class WobblyBrush {
         ctx.fill();
 
         ctx.fillStyle = oldFillStyle;
+        ctx.globalAlpha = this.opacity;
     }
 }
 
