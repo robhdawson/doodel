@@ -4,6 +4,7 @@ const $ = require('jquery');
 const _ = require('lodash');
 
 const BasicBrush = require('./brushes/basic');
+const WobblyBrush = require('./brushes/wobbly');
 
 /**
  * A little drwaing widget. Pass in a canvas and call `startDrawing`, and it will work,
@@ -31,13 +32,14 @@ class Scribbler {
         this.mouse = {x: 0, y: 0};
         this.lastMouse = {x: 0, y: 0};
 
-        this.drawSpacing = 3;
+        this.drawSpacing = 1;
         this.brushAlpha = 0.8;
 
         this.points = [];
 
         this.isPaused = false;
-        this.frameDelay = 150;
+        this.frameDelay = 90;
+        this.frameCount = 60;
         this.frame = 0;
 
         this.loadBrushes();
@@ -71,12 +73,18 @@ class Scribbler {
     }
 
     /**
-     * Loads in brushes from the bootstrap element.
+     * Sets up brushes.
      */
     loadBrushes() {
         this.brushes = [
-            new BasicBrush(2),
-            new BasicBrush(4),
+            new WobblyBrush(6),
+            new WobblyBrush(12),
+            new WobblyBrush(2),
+            new WobblyBrush(10),
+            new WobblyBrush(18),
+            new WobblyBrush(6),
+            new WobblyBrush(20),
+            new WobblyBrush(8),
         ];
 
         this.brushIndex = 0;
@@ -110,17 +118,28 @@ class Scribbler {
      * Assumes a 60-frame max loop
      */
     tick() {
-        _.each(this.points, function(point) {
+        this.ctx.clearRect(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
+
+        this.points.forEach(_.bind(function(point) {
             point.brush.draw(
                 this.ctx,
                 point.x,
                 point.y,
                 this.frame
-            ),
-        }, this);
+            );
+        }, this));
 
         if (!this.isPaused) {
             this.frame += 1;
+            if (this.frame >= this.frameCount) {
+                this.frame = 0;
+            }
+
             window.setTimeout(_.bind(this.tick, this), this.frameDelay);
         }
     }

@@ -15,8 +15,8 @@ class BasicBrush {
 
         ctx.beginPath();
         ctx.arc(
-            x - this.radius,
-            y - this.radius,
+            x,
+            y,
             this.radius,
             0,
             2 * Math.PI
@@ -27,3 +27,5 @@ class BasicBrush {
         ctx.fillStyle = oldFillStyle;
     }
 }
+
+module.exports = BasicBrush;

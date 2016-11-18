@@ -28,14 +28,14 @@ if (options.dev) {
 }
 
 if (options.publish) {
-    prefix = '/boilerboy';
+    prefix = '/doodel';
     buildpath = path.resolve(__dirname, '../build/prod');
 }
 
 const app = Metalsmith(__dirname)
 .metadata({
-    title: "Boilerboy",
-    description: "I'm boilerboy!",
+    title: "doodel",
+    description: "please..... doodel",
     prefix: prefix,
 })
 .use(webpack({
