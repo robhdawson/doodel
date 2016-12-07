@@ -38,7 +38,7 @@ class Scribbler {
         this.points = [];
 
         this.isPaused = false;
-        this.frameDelay = 90;
+        this.frameDelay = 110;
         this.frameCount = 60;
         this.frame = 0;
     }
@@ -74,7 +74,7 @@ class Scribbler {
      * A random brush!
      */
     randomBrush() {
-        const width = (Math.random() * 28) + 2;
+        const width = (Math.random() * 18) + 2;
         // const opacity = (Math.random() * 0.7) + 0.2;
         const opacity = 1;
 
